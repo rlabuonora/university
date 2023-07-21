@@ -7,12 +7,14 @@ header <- dashboardHeader(
 
 
 body <- dashboardBody(
+  use_theme(mytheme),
   fluidRow(
     column(width = 12,
            box(width = 4, solidHeader = TRUE,
                leafletOutput("mapa", height = 500)
            ),
            box(width = 8,
+               status = "warning",
                dataTableOutput("programs_tbl")
            )
     )),
@@ -22,7 +24,7 @@ body <- dashboardBody(
                selectizeInput("subject",
                               "Subject",
                               choices = unique(programs_geolocated$subject), 
-                              selected = unique(programs_geolocated$subject)[c(1, 12)],
+                              selected = unique(programs_geolocated$subject)[c(1, 9)],
                               multiple = TRUE)),
            box(width=4, status="warning",
                h4("Requirements"),
