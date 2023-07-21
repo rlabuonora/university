@@ -5,6 +5,7 @@ library(leaflet)
 library(htmltools)
 library(fresh)
 library(DT)
+library(htmltools)
 
 # Create the theme
 mytheme <- create_theme(
@@ -24,21 +25,6 @@ mytheme <- create_theme(
   )
 )
 
-# load data
-
-programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
-  select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
-         study_mode, course_intensity, duration, fee_gbp, toefl, ielts, bachelor_gpa,
-         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
-  mutate(ielts = if_else(is.na(ielts), 0, ielts)) %>% 
-  filter(ielts<=9) %>% # ielts must be 0-9
-  mutate(toefl = if_else(is.na(toefl), 0, toefl)) %>% 
-  filter(toefl<=120)
-# clean toefl and ielts
-
-the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>% 
-  filter(university != "ESCP Business School - Paris")
-
 
 # Helper function to filter programs within map bounds
 # de bounds
@@ -50,6 +36,30 @@ filter_bounds <- function(data, bounds) {
          latitude >= latRng[1] & latitude <= latRng[2] &
            longitude >= lngRng[1] & longitude <= lngRng[2])
 }
+
+
+# load data
+
+programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
+  select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
+         study_mode, requirements, course_intensity, duration_length, fee_gbp, toefl, ielts, bachelor_gpa,
+         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
+  mutate(ielts = if_else(is.na(ielts), 0, ielts)) %>% 
+  filter(ielts<=9) %>% # ielts must be 0-9
+  mutate(toefl = if_else(is.na(toefl), 0, toefl)) %>% 
+  filter(toefl<=120)
+# clean toefl and ielts
+
+
+locations_initial <- programs_geolocated %>% 
+  group_by(university, longitude, latitude) %>% 
+  summarize(n=n()) %>% 
+  mutate(lbl=htmlEscape(paste0(university, "</br>", n, " programs.")))
+  
+the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>% 
+  filter(university != "ESCP Business School - Paris")
+
+
 
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),

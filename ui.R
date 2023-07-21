@@ -1,5 +1,6 @@
 library(shinydashboard)
 library(leaflet)
+library(shinycssloaders)
 
 header <- dashboardHeader(
   title = ""
@@ -15,7 +16,9 @@ body <- dashboardBody(
            ),
            box(width = 8,
                status = "warning",
-               dataTableOutput("programs_tbl")
+               withSpinner(
+                dataTableOutput("programs_tbl")
+               )
            )
     )),
   fluidRow(
@@ -46,7 +49,7 @@ body <- dashboardBody(
                                   choices = unique(programs_geolocated$study_mode),
                                   selected = unique(programs_geolocated$study_mode))),
            box(width=4, status="warning",
-               sliderInput("tuition", "Tution fee (£/year):",
+               sliderInput("fee", "Tution fee (£/year):",
                            min = constants$fee[1], 
                            max = constants$fee[2], 
                            value = round(c(constants$fee[1],
