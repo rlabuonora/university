@@ -1,8 +1,4 @@
-library(shinydashboard)
-library(leaflet)
-library(htmltools)
-library(fresh)
-library(DT)
+
 
 function(input, output, session) {
   
@@ -22,7 +18,8 @@ function(input, output, session) {
   output$programs_tbl <- renderDataTable({
     
     req(inBounds()$programs)
-    datatable(inBounds()$programs %>% 
+    programs <- inBounds()$programs
+    datatable(programs %>% 
                 dplyr::select(program_title, study_level, study_mode, course_intensity,
                        duration, fee_gbp, university))
   })

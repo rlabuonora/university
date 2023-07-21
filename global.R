@@ -1,5 +1,10 @@
 library(fresh)
 library(dplyr)
+library(shinydashboard)
+library(leaflet)
+library(htmltools)
+library(fresh)
+library(DT)
 
 # Create the theme
 mytheme <- create_theme(
@@ -40,4 +45,6 @@ filter_bounds <- function(data, bounds) {
          latitude >= latRng[1] & latitude <= latRng[2] &
            longitude >= lngRng[1] & longitude <= lngRng[2])
 }
+
+constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE))
 

@@ -18,20 +18,29 @@ body <- dashboardBody(
     )),
   fluidRow(
     column(width = 12,
-           box(width = 3, status = "warning",
+           box(width = 4, status = "warning",
                selectizeInput("subject",
                               "Subject",
                               choices = unique(programs_geolocated$subject), 
                               selected = unique(programs_geolocated$subject)[c(1, 12)],
                               multiple = TRUE)),
-           box(width = 3, status = "warning",
+           box(width = 2, status = "warning",
                checkboxGroupInput("study_level", "Study Level",
                                   choices = unique(programs_geolocated$study_level),
                                   selected = unique(programs_geolocated$study_level)
-               )
-           )
-           )
-    
+               )),
+           box(width=2, status="warning",
+               checkboxGroupInput("study_mode", "Study Mode",
+                                  choices = unique(programs_geolocated$study_mode),
+                                  selected = unique(programs_geolocated$study_mode))),
+           box(width=4, status="warning",
+               sliderInput("range", "Tution fee (GBP/year):",
+                           min = constants$fee[1], 
+                           max = constants$fee[2], 
+                           value = c(constants$fee[1],
+                                     constants$fee[2])))
+               
+    )
   )
 )
 
