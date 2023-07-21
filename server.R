@@ -20,6 +20,8 @@ function(input, output, session) {
   })
   
   output$programs_tbl <- renderDataTable({
+    
+    req(inBounds()$programs)
     datatable(inBounds()$programs %>% 
                 select(program_title, study_level, study_mode, course_intensity,
                        duration, fee_gbp, university))
@@ -28,8 +30,6 @@ function(input, output, session) {
 
 
   output$mapa <- renderLeaflet({
-    
-
     
     leaflet(the_ranking_data) %>%
       addProviderTiles("CartoDB.Positron") %>% 
