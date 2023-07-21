@@ -8,28 +8,30 @@ header <- dashboardHeader(
 
 body <- dashboardBody(
   fluidRow(
-    column(width = 9,
-           box(width = NULL, solidHeader = TRUE,
+    column(width = 12,
+           box(width = 4, solidHeader = TRUE,
                leafletOutput("mapa", height = 500)
            ),
-           box(width = NULL,
-               dataTableOutput("programs_tbl")
+           box(width = 8,
+               dataTableOutput("programs_tbl", height = 500)
            )
-    ),
-    column(width = 3,
-           box(width = NULL, status = "warning",
+    )),
+  fluidRow(
+    column(width = 12,
+           box(width = 3, status = "warning",
                selectizeInput("subject",
                               "Subject",
-                           choices = unique(programs_geolocated$subject), 
-                           selected = unique(programs_geolocated$subject)[c(1, 12)],
-                           multiple = TRUE)),
-           box(width = NULL, status = "warning",
+                              choices = unique(programs_geolocated$subject), 
+                              selected = unique(programs_geolocated$subject)[c(1, 12)],
+                              multiple = TRUE)),
+           box(width = 3, status = "warning",
                checkboxGroupInput("study_level", "Study Level",
-                           choices = unique(programs_geolocated$study_level),
-                           selected = unique(programs_geolocated$study_level)
+                                  choices = unique(programs_geolocated$study_level),
+                                  selected = unique(programs_geolocated$study_level)
                )
            )
-    )
+           )
+    
   )
 )
 
