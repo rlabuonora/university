@@ -13,7 +13,7 @@ body <- dashboardBody(
                leafletOutput("mapa", height = 500)
            ),
            box(width = 8,
-               dataTableOutput("programs_tbl", height = 500)
+               dataTableOutput("programs_tbl")
            )
     )),
   fluidRow(

@@ -23,7 +23,7 @@ function(input, output, session) {
     
     req(inBounds()$programs)
     datatable(inBounds()$programs %>% 
-                select(program_title, study_level, study_mode, course_intensity,
+                dplyr::select(program_title, study_level, study_mode, course_intensity,
                        duration, fee_gbp, university))
   })
   
