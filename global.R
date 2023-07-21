@@ -21,12 +21,12 @@ mytheme <- create_theme(
 
 # load data
 
-programs_geolocated <- readRDS("~/apps/university/data/programs_geolocated.rds") %>% 
+programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
   select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
          study_mode, course_intensity, duration, fee_gbp, toefl, ielts, bachelor_gpa,
          cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate)
 
-the_ranking_data <- readRDS("~/apps/university/data/the_ranking_data.rds") %>% 
+the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>% 
   filter(university != "ESCP Business School - Paris")
 
 
