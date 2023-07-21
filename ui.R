@@ -34,12 +34,19 @@ body <- dashboardBody(
                                   choices = unique(programs_geolocated$study_mode),
                                   selected = unique(programs_geolocated$study_mode))),
            box(width=4, status="warning",
-               sliderInput("range", "Tution fee (GBP/year):",
+               sliderInput("tuition", "Tution fee (£/year):",
                            min = constants$fee[1], 
                            max = constants$fee[2], 
-                           value = c(constants$fee[1],
-                                     constants$fee[2])))
-               
+                           value = round(c(constants$fee[1],
+                                     constants$fee[2]))),
+               sliderInput("ielts", "IELTS",
+                           min = 0, 
+                           max = 9, 
+                           value = c(0, 9)),
+               sliderInput("toefl", "TOEFL",
+                           min = 0, 
+                           max = 120, 
+                           value = c(0, 120)))
     )
   )
 )

@@ -29,7 +29,12 @@ mytheme <- create_theme(
 programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
   select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
          study_mode, course_intensity, duration, fee_gbp, toefl, ielts, bachelor_gpa,
-         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate)
+         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
+  mutate(ielts = if_else(is.na(ielts), 0, ielts)) %>% 
+  filter(ielts<=9) %>% # ielts must be 0-9
+  mutate(toefl = if_else(is.na(toefl), 0, toefl)) %>% 
+  filter(toefl<=120)
+# clean toefl and ielts
 
 the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>% 
   filter(university != "ESCP Business School - Paris")
@@ -46,5 +51,7 @@ filter_bounds <- function(data, bounds) {
            longitude >= lngRng[1] & longitude <= lngRng[2])
 }
 
-constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE))
+constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
+                  ielts=range(programs_geolocated$ielts, na.rm=TRUE),
+                  toefl=range(programs_geolocated$toefl, na.rm=TRUE))
 
