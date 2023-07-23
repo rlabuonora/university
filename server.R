@@ -6,13 +6,15 @@ function(input, output, session) {
   output$programs_tbl <- renderDataTable({
     
     programs <- programs() %>% 
-      dplyr::select(program_title, university, 
+      dplyr::select(program_title, subject, university, 
                     study_level, study_mode, course_intensity,
-                    duration_length, fee_gbp, requirements)
+                    duration_length, fee_gbp) %>% 
+      mutate(duration_length=if_else(
+        is.na(duration_length), NA, paste0(duration_length, " Months")))
     
     datatable(programs,
-              colnames=c("Program", "University", "Level", "Mode", 
-                         "Intensity", "Duration", "Fee", "Requirements"),
+              colnames=c("Program", "Subject", "University", "Level", "Mode", 
+                         "Intensity", "Duration", "Yearly Fee"),
               rownames= FALSE) %>% 
       formatCurrency(
         "fee_gbp",
@@ -34,6 +36,7 @@ function(input, output, session) {
       filter_bounds(bounds) %>% 
       filter(study_mode %in% input$study_mode) %>% 
       filter(study_level %in% input$study_level) %>% 
+      filter(subject %in% input$subject) %>% 
       filter(between(ielts, input$ielts[1], input$ielts[2])) %>% 
       filter(between(toefl, input$toefl[1], input$toefl[2])) %>% 
       filter(between(fee_gbp, input$fee[1], input$fee[2]))
