@@ -43,11 +43,7 @@ filter_bounds <- function(data, bounds) {
 programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
   select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
          study_mode, requirements, course_intensity, duration_length, fee_gbp, toefl, ielts, bachelor_gpa,
-         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
-  mutate(ielts = if_else(is.na(ielts), 0, ielts)) %>% 
-  filter(ielts<=9) %>% # ielts must be 0-9
-  mutate(toefl = if_else(is.na(toefl), 0, toefl)) %>% 
-  filter(toefl<=120)
+         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) 
 # clean toefl and ielts
 
 
@@ -63,5 +59,6 @@ the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>%
 
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),
-                  toefl=range(programs_geolocated$toefl, na.rm=TRUE))
+                  toefl=range(programs_geolocated$toefl, na.rm=TRUE),
+                  months=range(programs_geolocated$duration_length, na.rm=TRUE))
 
