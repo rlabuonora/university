@@ -50,6 +50,7 @@ function(input, output, session) {
     leaflet(locations_initial) %>%
       addProviderTiles("CartoDB.Positron") %>% 
       addCircleMarkers(label = ~htmlEscape(lbl), color="blue") %>% 
+      #setView(lat = -32.8, lng = -56, zoom = 7)
       setView(-3, 53,  zoom=6)
 
   })

@@ -43,7 +43,7 @@ filter_bounds <- function(data, bounds) {
 programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
   select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
          study_mode, requirements, course_intensity, duration_length, fee_gbp, toefl, ielts, bachelor_gpa,
-         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) 
+         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate)
 # clean toefl and ielts
 
 
