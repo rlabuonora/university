@@ -15,7 +15,7 @@ body <- dashboardBody(
     column(width = 4,
            
            box(width = NULL, id="mapa", solidHeader = TRUE,
-               leafletOutput("mapa", height = 500))),
+               leafletOutput("mapa", height = 600))),
     column(
       width=8,
       box(width = NULL, 
@@ -80,7 +80,14 @@ body <- dashboardBody(
           status = "warning",
           headerBorder=FALSE,
           withSpinner(
-            dataTableOutput("programs_tbl"))))))
+            dataTableOutput("programs_tbl"))),
+      box(width = NULL,
+          title="Universities",
+          collapsible=TRUE,
+          status = "warning",
+          headerBorder=FALSE,
+          withSpinner(
+            dataTableOutput("universities_tbl"))))))
 
 
 

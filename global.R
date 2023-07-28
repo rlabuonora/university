@@ -32,6 +32,8 @@ filter_bounds <- function(data, bounds) {
   latRng <- range(bounds$north, bounds$south)
   lngRng <- range(bounds$east, bounds$west)
   
+  stopifnot("latitude" %in% colnames(data))
+  
   subset(data,
          latitude >= latRng[1] & latitude <= latRng[2] &
            longitude >= lngRng[1] & longitude <= lngRng[2])
@@ -50,12 +52,12 @@ programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>%
 locations_initial <- programs_geolocated %>% 
   group_by(university, longitude, latitude) %>% 
   summarize(n=n()) %>% 
-  mutate(lbl=htmlEscape(paste0(university, "</br>", n, " programs.")))
+  mutate(lbl=HTML(paste0(university, "</br>", n, " programs.")))
   
-the_ranking_data <- readRDS("./data/the_ranking_data.rds") %>% 
-  filter(university != "ESCP Business School - Paris")
-
-
+universities_geolocated <- readRDS("./data/universities.rds") %>% 
+  ungroup() %>% 
+  mutate(rank_sort=str_remove(rank, "=")) %>% 
+  mutate(rank_sort=as.numeric(str_remove(rank_sort, "–\\d{3,4}")))
 
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),

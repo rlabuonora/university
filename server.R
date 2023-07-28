@@ -13,6 +13,7 @@ function(input, output, session) {
         is.na(duration_length), NA, paste0(duration_length, " Months")))
     
     datatable(programs,
+              options = list(pageLength = 5),
               colnames=c("Program", "Subject", "University", "Level", "Mode", 
                          "Intensity", "Duration", "Yearly Fee"),
               rownames= FALSE) %>% 
@@ -23,6 +24,31 @@ function(input, output, session) {
         mark = ",",
         digits = 0
       )
+  })
+  
+  output$universities_tbl <- renderDataTable({
+    
+    df <- universities() %>% 
+      dplyr::select(university, rank, rank_sort, overall_score, 
+                    teaching, research, citations,
+                    industry_income, international_outlook) %>% 
+      distinct() %>% 
+      arrange(rank_sort) %>% 
+      select(-rank_sort)
+    
+    datatable(df,
+              colnames=c("University", "Rank", "Overall Score", "Teaching", "Research",
+                         "Citations", "Industry Income", "International Outlook"),
+              rownames= FALSE)
+  })
+  
+  universities <- reactive({
+    req(input$mapa_bounds)
+    bounds <- input$mapa_bounds
+    
+
+    universities_geolocated %>% 
+      filter_bounds(bounds) 
   })
   
   programs <- reactive({
@@ -49,7 +75,7 @@ function(input, output, session) {
     
     leaflet(locations_initial) %>%
       addProviderTiles("CartoDB.Positron") %>% 
-      addCircleMarkers(label = ~htmlEscape(lbl), color="blue") %>% 
+      addCircleMarkers(label = ~lbl, color="blue") %>% 
       #setView(lat = -32.8, lng = -56, zoom = 7)
       setView(-3, 53,  zoom=6)
 
