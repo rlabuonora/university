@@ -5,14 +5,16 @@ function(input, output, session) {
   
   output$programs_tbl <- renderDataTable({
     
-    programs <- programs() %>% 
+
+    
+    progs_tbl <- programs_filtered() %>% 
       dplyr::select(program_title, subject, university, 
                     study_level, study_mode, course_intensity,
                     duration_length, fee_gbp) %>% 
       mutate(duration_length=if_else(
         is.na(duration_length), NA, paste0(duration_length, " Months")))
     
-    datatable(programs,
+    datatable(progs_tbl,
               options = list(pageLength = 5),
               colnames=c("Program", "Subject", "University", "Level", "Mode", 
                          "Intensity", "Duration", "Yearly Fee"),
@@ -28,13 +30,10 @@ function(input, output, session) {
   
   output$universities_tbl <- renderDataTable({
     
-    df <- universities() %>% 
-      dplyr::select(university, rank, rank_sort, overall_score, 
-                    teaching, research, citations,
-                    industry_income, international_outlook) %>% 
-      distinct() %>% 
+    df <- locations() %>% 
       arrange(rank_sort) %>% 
-      select(-rank_sort)
+      select(-rank_sort, -location, -longitude, -latitude) %>% 
+      distinct()
     
     datatable(df,
               colnames=c("University", "Rank", "Overall Score", "Teaching", "Research",
@@ -42,21 +41,13 @@ function(input, output, session) {
               rownames= FALSE)
   })
   
-  universities <- reactive({
-    req(input$mapa_bounds)
-    bounds <- input$mapa_bounds
+
+  
+  programs_filtered <- reactive({
     
 
-    universities_geolocated %>% 
-      filter_bounds(bounds) 
-  })
-  
-  programs <- reactive({
-    
-    
     req(input$mapa_bounds)
     bounds <- input$mapa_bounds
-    
 
     programs_geolocated %>% 
       filter_bounds(bounds) %>% 
@@ -70,12 +61,26 @@ function(input, output, session) {
       
   })
   
+  
+  locations <- reactive({
+
+
+    programs_filtered() %>%
+      group_by(university, location, longitude, latitude) %>% 
+      summarize() %>% 
+      left_join(universities, by=c("university", "location")) %>% 
+      dplyr::select(university, rank, location, longitude, latitude,
+                    rank_sort, overall_score, 
+                    teaching, research, citations,
+                    industry_income, international_outlook)
+  })
 
   output$mapa <- renderLeaflet({
     
+
     leaflet(locations_initial) %>%
       addProviderTiles("CartoDB.Positron") %>% 
-      addCircleMarkers(label = ~lbl, color="blue") %>% 
+      addCircleMarkers(label = ~university, color="blue") %>% 
       #setView(lat = -32.8, lng = -56, zoom = 7)
       setView(-3, 53,  zoom=6)
 
@@ -83,14 +88,14 @@ function(input, output, session) {
   
   observe({
     
-    data <- programs() %>% 
-      group_by(location, university, longitude, latitude) %>% 
-      summarize(n=n()) %>% 
-      mutate(lbl=HTML(university, "</br>", n, " programs."))
     
-    leafletProxy("mapa") %>% 
-      clearMarkers() %>% 
-      addCircleMarkers(data=data,
-                       label = ~lbl)
+    df <- locations()
+
+    if(nrow(locations())>0) { 
+      leafletProxy("mapa", session,data=df) %>% 
+        clearMarkers() %>% 
+        addCircleMarkers(label = ~university, color="blue")
+    }
+    
   })
 }

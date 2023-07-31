@@ -6,7 +6,7 @@ library(htmltools)
 library(fresh)
 library(DT)
 library(htmltools)
-
+library(stringr)
 # Create the theme
 mytheme <- create_theme(
   adminlte_color(
@@ -50,14 +50,13 @@ programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>%
 
 
 locations_initial <- programs_geolocated %>% 
-  group_by(university, longitude, latitude) %>% 
-  summarize(n=n()) %>% 
-  mutate(lbl=HTML(paste0(university, "</br>", n, " programs.")))
+  group_by(university, longitude, latitude) 
   
-universities_geolocated <- readRDS("./data/universities.rds") %>% 
+universities <- readRDS("./data/universities.rds") %>% 
   ungroup() %>% 
   mutate(rank_sort=str_remove(rank, "=")) %>% 
-  mutate(rank_sort=as.numeric(str_remove(rank_sort, "–\\d{3,4}")))
+  mutate(rank_sort=as.numeric(str_remove(rank_sort, "–\\d{3,4}"))) %>% 
+  select(-longitude, -latitude)
 
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),

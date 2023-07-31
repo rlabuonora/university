@@ -10,11 +10,11 @@ header <- dashboardHeader(
 
 body <- dashboardBody(
   use_theme(mytheme),
-  tags$head(tags$style('#mapa .box-header{ display: none}')),
+  tags$head(tags$style('#mapa-div .box-header{ display: none}')),
   fluidRow(
     column(width = 4,
            
-           box(width = NULL, id="mapa", solidHeader = TRUE,
+           box(width = NULL, id="mapa-div", solidHeader = TRUE,
                leafletOutput("mapa", height = 600))),
     column(
       width=8,

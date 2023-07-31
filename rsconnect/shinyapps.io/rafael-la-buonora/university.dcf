@@ -5,9 +5,9 @@ account: rafael-la-buonora
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9488751
-bundleId: 7507232
+bundleId: 7514268
 url: https://rafael-la-buonora.shinyapps.io/university/
-when: 1690562343.67756
-lastSyncTime: 1690562343.67762
+when: 1690806092.33815
+lastSyncTime: 1690806092.33817
 asMultiple: FALSE
 asStatic: FALSE
