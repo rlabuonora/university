@@ -15,6 +15,7 @@ function(input, output, session) {
         is.na(duration_length), NA, paste0(duration_length, " Months")))
     
     datatable(progs_tbl,
+              selection = 'none',
               options = list(pageLength = 5),
               colnames=c("Program", "Subject", "University", "Level", "Mode", 
                          "Intensity", "Duration", "Yearly Fee"),
@@ -35,9 +36,9 @@ function(input, output, session) {
       select(-rank_sort, -location, -longitude, -latitude) %>% 
       distinct()
     
-    print(colnames(df))
-    
+
     datatable(df,
+              selection = 'none',
               colnames=c("University", "Rank", "Overall Score", "Teaching", "Research",
                          "Citations", "Industry Income", "International Outlook"),
               rownames= FALSE)
