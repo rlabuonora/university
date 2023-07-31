@@ -35,6 +35,8 @@ function(input, output, session) {
       select(-rank_sort, -location, -longitude, -latitude) %>% 
       distinct()
     
+    print(colnames(df))
+    
     datatable(df,
               colnames=c("University", "Rank", "Overall Score", "Teaching", "Research",
                          "Citations", "Industry Income", "International Outlook"),
@@ -56,7 +58,8 @@ function(input, output, session) {
       filter(subject %in% input$subject) %>% 
       filter(between(ielts, input$ielts[1], input$ielts[2])) %>% 
       filter(between(toefl, input$toefl[1], input$toefl[2])) %>% 
-      filter(between(fee_gbp, input$fee[1], input$fee[2]))
+      filter(between(fee_gbp, input$fee[1], input$fee[2])) %>% 
+      arrange(university)
       
       
   })
@@ -72,7 +75,8 @@ function(input, output, session) {
       dplyr::select(university, rank, location, longitude, latitude,
                     rank_sort, overall_score, 
                     teaching, research, citations,
-                    industry_income, international_outlook)
+                    industry_income, international_outlook) %>% 
+      ungroup()
   })
 
   output$mapa <- renderLeaflet({
