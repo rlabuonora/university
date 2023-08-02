@@ -47,7 +47,8 @@ programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>%
          study_mode, requirements, course_intensity, duration_length, fee_gbp, toefl, ielts, bachelor_gpa,
          cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
   mutate(course_intensity=if_else(is.na(course_intensity), "N/A", course_intensity)) %>% 
-  mutate(study_mode=if_else(is.na(study_mode), "N/A", study_mode)) 
+  mutate(study_mode=if_else(is.na(study_mode), "N/A", study_mode)) %>% 
+  filter(university != "ESCP Business School - Paris")
 # clean toefl and ielts
 
 
@@ -56,10 +57,12 @@ locations_initial <- programs_geolocated %>%
   
 universities <- readRDS("./data/universities.rds") %>% 
   ungroup() %>% 
+  mutate(rank=if_else(rank=="Reporter", NA, rank)) %>% 
   mutate(rank_sort=str_remove(rank, "=")) %>% 
   mutate(rank_sort=as.numeric(str_remove(rank_sort, "–\\d{3,4}"))) %>% 
   select(-longitude, -latitude) %>% 
-  select(-programs) 
+  select(-programs)
+  
 
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),

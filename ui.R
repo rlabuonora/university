@@ -4,7 +4,20 @@ library(shinycssloaders)
 #library(shinydashboardPlus)
 
 header <- dashboardHeader(
-  title = ""
+  title = "",
+  dropdownMenu(
+    type = "notifications", 
+    icon = icon("question-circle"),
+    badgeStatus = NULL,
+    headerText = "Data Sources:",
+    
+    notificationItem("https://www.topuniversities.com/", 
+                     icon = icon("link"),
+                     href = "https://www.topuniversities.com/"),
+    notificationItem("https://www.timeshighereducation.com/", 
+                     icon = icon("link"),
+                     href = "https://www.timeshighereducation.com/")
+  )
 )
 
 

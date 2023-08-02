@@ -32,12 +32,9 @@ function(input, output, session) {
     df <- locations() %>% 
       arrange(rank_sort) %>% 
       select(-rank_sort, -location, -longitude, -latitude, 
-             -programs, -lbl) %>% 
+             -programs, -lbl, -rank_lbl) %>% 
       distinct()
     
-    print(head(df))
-    
-
     datatable(df,
               selection = 'none',
               colnames=c("University", "Rank", "Overall Score", "Teaching", "Research",
@@ -59,10 +56,10 @@ function(input, output, session) {
       filter(study_level %in% input$study_level) %>% 
       filter(course_intensity %in% input$course_intensity) %>% 
       filter(subject %in% input$subject) %>% 
-      filter(between(duration_length, input$duration[1], input$duration[2])) %>% 
-      filter(between(ielts, input$ielts[1], input$ielts[2])) %>% 
-      filter(between(toefl, input$toefl[1], input$toefl[2])) %>% 
-      filter(between(fee_gbp, input$fee[1], input$fee[2])) %>% 
+      filter(is.na(duration_length) | between(duration_length, input$duration[1], input$duration[2])) %>% 
+      filter(is.na(ielts)           | between(ielts, input$ielts[1], input$ielts[2])) %>% 
+      filter(is.na(toefl)           | between(toefl, input$toefl[1], input$toefl[2])) %>% 
+      filter(is.na(fee_gbp)         | between(fee_gbp, input$fee[1], input$fee[2])) %>% 
       arrange(university)
       
       
@@ -81,9 +78,10 @@ function(input, output, session) {
                     teaching, research, citations,
                     industry_income, international_outlook) %>% 
       ungroup() %>% 
+      mutate(rank_lbl=if_else(is.na(rank), "", paste0("Ranked ", rank))) %>% 
       mutate(lbl=paste(sep="<br/>", 
                        university, 
-                       rank))
+                       rank_lbl))
   })
 
   output$mapa <- renderLeaflet({
