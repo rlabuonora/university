@@ -33,7 +33,7 @@ body <- dashboardBody(
                                   multiple = TRUE),
                   hr(),
             
-                   sliderInput("fee", "Tution fee (£/year):",
+                   sliderInput("fee", "Tuition fee (£/year):",
                                min = constants$fee[1], 
                                max = constants$fee[2], 
                                value = round(c(constants$fee[1],
@@ -57,16 +57,16 @@ body <- dashboardBody(
                    hr(),
                           column(width=4,
                                  checkboxGroupInput("study_level", "Study Level",
-                                                    choices = unique(programs_geolocated$study_level),
-                                                    selected = unique(programs_geolocated$study_level))),
+                                                    choices = constants$study_levels,
+                                                    selected = constants$study_levels)),
                           column(width=4,
                                  checkboxGroupInput("study_mode", "Study Mode",
-                                                    choices = unique(programs_geolocated$study_mode),
-                                                    selected = unique(programs_geolocated$study_mode))),
+                                                    choices = constants$study_modes,
+                                                    selected = constants$study_modes)),
                           column(width=4,
                                  checkboxGroupInput("study_mode", "Course Intensity",
-                                                    choices = unique(programs_geolocated$course_intensity),
-                                                    selected = unique(programs_geolocated$course_intensity))))
+                                                    choices = constants$course_intensities,
+                                                    selected = constants$course_intensities)))
 
                  
                  # ,sliderInput("duration", "Months",

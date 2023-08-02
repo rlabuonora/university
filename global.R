@@ -45,7 +45,10 @@ filter_bounds <- function(data, bounds) {
 programs_geolocated <- readRDS("./data/programs_geolocated.rds") %>% 
   select(university, longitude, latitude, requirements, study_level, location, program_title, subject,
          study_mode, requirements, course_intensity, duration_length, fee_gbp, toefl, ielts, bachelor_gpa,
-         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate)
+         cambridge_cae_advanced, pte_academic, a_levels, international_baccalaureate) %>% 
+  mutate(course_intensity=if_else(is.na(course_intensity), "N/A", course_intensity)) %>% 
+  mutate(study_mode=if_else(is.na(study_mode), "N/A", study_mode))
+  
 # clean toefl and ielts
 
 
@@ -61,5 +64,8 @@ universities <- readRDS("./data/universities.rds") %>%
 constants <- list(fee=range(programs_geolocated$fee_gbp, na.rm = TRUE),
                   ielts=range(programs_geolocated$ielts, na.rm=TRUE),
                   toefl=range(programs_geolocated$toefl, na.rm=TRUE),
+                  study_levels=unique(programs_geolocated$study_level),
+                  study_modes=c("On Campus", "Online", "Blended", "N/A"),
+                  course_intensities=unique(programs_geolocated$course_intensity),
                   months=range(programs_geolocated$duration_length, na.rm=TRUE))
 
