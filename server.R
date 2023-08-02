@@ -33,8 +33,11 @@ function(input, output, session) {
     
     df <- locations() %>% 
       arrange(rank_sort) %>% 
-      select(-rank_sort, -location, -longitude, -latitude) %>% 
+      select(-rank_sort, -location, -longitude, -latitude, 
+             -programs, -lbl) %>% 
       distinct()
+    
+    print(head(df))
     
 
     datatable(df,
@@ -51,11 +54,12 @@ function(input, output, session) {
 
     req(input$mapa_bounds)
     bounds <- input$mapa_bounds
-
+    
     programs_geolocated %>% 
       filter_bounds(bounds) %>% 
       filter(study_mode %in% input$study_mode) %>% 
       filter(study_level %in% input$study_level) %>% 
+      filter(course_intensity %in% input$course_intensity) %>% 
       filter(subject %in% input$subject) %>% 
       filter(between(ielts, input$ielts[1], input$ielts[2])) %>% 
       filter(between(toefl, input$toefl[1], input$toefl[2])) %>% 
@@ -71,13 +75,16 @@ function(input, output, session) {
 
     programs_filtered() %>%
       group_by(university, location, longitude, latitude) %>% 
-      summarize() %>% 
+      summarize(programs=n()) %>% 
       left_join(universities, by=c("university", "location")) %>% 
-      dplyr::select(university, rank, location, longitude, latitude,
+      dplyr::select(university, programs, rank, location, longitude, latitude,
                     rank_sort, overall_score, 
                     teaching, research, citations,
                     industry_income, international_outlook) %>% 
-      ungroup()
+      ungroup() %>% 
+      mutate(lbl=paste(sep="<br/>", 
+                       university, 
+                       rank))
   })
 
   output$mapa <- renderLeaflet({
@@ -94,12 +101,16 @@ function(input, output, session) {
   observe({
     
     
-    df <- locations()
+    df <- locations() 
+    
 
     if(nrow(locations())>0) { 
       leafletProxy("mapa", session,data=df) %>% 
         clearMarkers() %>% 
-        addCircleMarkers(label = ~university, color="blue")
+        addCircleMarkers(label = ~lapply(lbl, htmltools::HTML), color="blue")
+    } else {
+      leafletProxy("mapa", session) %>% 
+        clearMarkers()
     }
     
   })

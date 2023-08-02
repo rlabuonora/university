@@ -64,7 +64,7 @@ body <- dashboardBody(
                                                     choices = constants$study_modes,
                                                     selected = constants$study_modes)),
                           column(width=4,
-                                 checkboxGroupInput("study_mode", "Course Intensity",
+                                 checkboxGroupInput("course_intensity", "Course Intensity",
                                                     choices = constants$course_intensities,
                                                     selected = constants$course_intensities)))
 
