@@ -10,15 +10,13 @@ function(input, output, session) {
     progs_tbl <- programs_filtered() %>% 
       dplyr::select(program_title, subject, university, 
                     study_level, study_mode, course_intensity,
-                    duration_length, fee_gbp) %>% 
-      mutate(duration_length=if_else(
-        is.na(duration_length), NA, paste0(duration_length, " Months")))
+                    duration_length, fee_gbp) 
     
     datatable(progs_tbl,
               selection = 'none',
               options = list(pageLength = 5),
               colnames=c("Program", "Subject", "University", "Level", "Mode", 
-                         "Intensity", "Duration", "Yearly Fee"),
+                         "Intensity", "Duration (Months)", "Yearly Fee"),
               rownames= FALSE) %>% 
       formatCurrency(
         "fee_gbp",
@@ -61,6 +59,7 @@ function(input, output, session) {
       filter(study_level %in% input$study_level) %>% 
       filter(course_intensity %in% input$course_intensity) %>% 
       filter(subject %in% input$subject) %>% 
+      filter(between(duration_length, input$duration[1], input$duration[2])) %>% 
       filter(between(ielts, input$ielts[1], input$ielts[2])) %>% 
       filter(between(toefl, input$toefl[1], input$toefl[2])) %>% 
       filter(between(fee_gbp, input$fee[1], input$fee[2])) %>% 
